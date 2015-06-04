@@ -142,6 +142,7 @@ GetOptionsWithCompletion(
     'source-address=s' => $noop,
     'force-ipv4|4' => $noop,
     'force-ipv6|6' => $noop,
+    'cn-verification-proxy=s' => $noop,
 
     # Video Selection:
     'playlist-start=i' => $noop,
@@ -159,6 +160,7 @@ GetOptionsWithCompletion(
     'max-views=i' => $noop,
     'match-filter=s' => $noop, # e.g. "like_count > 100 & dislike_count <? 50 & description"
     'no-playlist' => $noop,
+    'yes-playlist' => $noop,
     'age-limit=i' => $noop,
     'download-archive=s' => $noop,
     'include-ads' => $noop,
@@ -172,6 +174,7 @@ GetOptionsWithCompletion(
     'xattr-set-filesize' => $noop,
     'hls-prefer-native' => $noop,
     'external-downloader=s' => $noop,
+    'external-downloader-args=s' => $noop,
 
     # Filesystem Options:
     'batch-file|a=s' => $noop,
@@ -221,7 +224,7 @@ GetOptionsWithCompletion(
     'no-progress' => $noop,
     'console-title' => $noop,
     'verbose|v' => $noop,
-    'dump-intermediate-pages' => $noop,
+    'dump-pages' => $noop,
     'write-pages' => $noop,
     'print-traffic' => $noop,
     'call-home|C' => $noop,
@@ -241,7 +244,6 @@ GetOptionsWithCompletion(
     'format|f=s' => $noop, # format or format1/format2/format3 (by order of preference)
     'all-formats' => $noop,
     'prefer-free-formats' => $noop,
-    'max-quality=s' => $noop,
     'list-formats|F' => $noop,
     'youtube-skip-dash-manifest' => $noop,
     'merge-output-format=s' => $noop,
@@ -271,12 +273,14 @@ GetOptionsWithCompletion(
     'embed-subs' => $noop,
     'embed-thumbnail' => $noop,
     'add-metadata' => $noop,
+    'metadata-from-title=s' => $noop,
     'xattrs' => $noop,
     'fixup=s' => $noop,
     'prefer-avconv' => $noop,
     'prefer-ffmpeg' => $noop,
     'ffmpeg-location=s' => $noop,
     'exec=s' => $noop,
+    'convert-subtitles=s' => $noop,
 );
 
 # ABSTRACT: Shell completer for youtube-dl
