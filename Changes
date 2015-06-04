@@ -1,5 +1,10 @@
 Revision history for App-ShellCompleter-YoutubeDl
 
+0.02    2015-06-04 (PERLANCAR)
+
+	- Update to youtube-dl 2015.05.20.
+
+
 0.01    2015-06-04 (PERLANCAR)
 
         - First release.
