@@ -1,0 +1,297 @@
+#!perl
+
+# DATE
+# VERSION
+
+# NO_PERINCI_CMDLINE_SCRIPT
+# FRAGMENT id=shcompgen-hint completer=1 for=youtube-dl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::Any '$log';
+
+use Complete::Util qw(complete_array_elem complete_file);
+use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+
+die "This script is for shell completion only\n"
+    unless $ENV{COMP_LINE} || $ENV{COMMAND_LINE};
+
+my $noop = sub {};
+
+# the list of options is taken from output of youtube-dl 2015.02.23.1. it should
+# be updated from time to time.
+GetOptionsWithCompletion(
+    sub {
+        my %args  = @_;
+        my $type      = $args{type};
+        my $word      = $args{word};
+        if ($type eq 'arg') {
+            #$log->tracef("Completing arg");
+            return undef;
+        } elsif ($type eq 'optval') {
+            my $ospec = $args{ospec};
+            my $opt   = $args{opt};
+            $log->tracef("Completing optval (opt=$opt)");
+            if (
+                $ospec eq 'default-search=s'
+            ) {
+                return complete_array_elem(
+                    array => ["gvsearch2:", "auto", "auto_warning", "error", "fixup_error"],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'external-downloader=s'
+            ) {
+                return complete_array_elem(
+                    array => ["aria2c", "curl", "wget"],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'download-archive=s' ||
+                    $ospec eq 'output|o=s' ||
+                    $ospec eq 'load-info=s' ||
+                    $ospec eq 'cookies=s'
+                ) {
+                return complete_file(word=>$word);
+            } elsif (
+                $ospec eq 'cache-dir=s'
+            ) {
+                return complete_file(word=>$word, filter=>'d');
+            } elsif (
+                $ospec eq 'ffmpeg-location=s'
+            ) {
+                return complete_file(word=>$word, filter=>'dx');
+            } elsif (
+                $ospec eq 'format|f=s'
+            ) {
+                # XXX format supports format1/format2/...
+                return complete_array_elem(
+                    array => [qw/aac m4a mp3 mp4 ogg wav webm/,
+                              qw/best bestvideo bestaudio worst/],
+                    word  => $word,
+                );
+                # XXX format supports merge: bestvideo+bestaudio
+                # XXX format supports filter, e.g. '[filesize>10M]'
+            } elsif (
+                $ospec eq 'merge-output-format=s'
+            ) {
+                return complete_array_elem(
+                    array => [qw/mkv mp4 ogg webm/],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'sub-format=s'
+            ) {
+                # XXX sub-format supports format1/format2/...
+                return complete_array_elem(
+                    array => [qw/aas srt best/],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'audio-format=s'
+            ) {
+                return complete_array_elem(
+                    array => ["best", "aac", "vorbis", "mp3", "m4a", "opus", "wav"],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'audio-quality=s'
+            ) {
+                # XXX audio-quality also supports specifying bitrate e.g. '128k'
+                return complete_array_elem(
+                    array => [0..9],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'recode-video=s'
+            ) {
+                return complete_array_elem(
+                    array => [qw/mp4 flv ogg webm mkv/],
+                    word  => $word,
+                );
+            } elsif (
+                $ospec eq 'fixup=s'
+            ) {
+                return complete_array_elem(
+                    array => [qw/nothing warn detect_or_warn/],
+                    word  => $word,
+                );
+            }
+        }
+        return [];
+    },
+
+    # General Options:
+    'help|h' => $noop,
+    'version' => $noop,
+    'update|U' => $noop,
+    'ignore-errors|i' => $noop,
+    'abort-on-error' => $noop,
+    'dump-user-agent' => $noop,
+    'list-extractors' => $noop,
+    'extractor-descriptions' => $noop,
+    'default-search=s' => $noop,
+    'ignore-config' => $noop,
+    'flat-playlist' => $noop,
+    'no-color' => $noop,
+
+    # Network Options:
+    'proxy=s' => $noop,
+    'socket-timeout=i' => $noop,
+    'source-address=s' => $noop,
+    'force-ipv4|4' => $noop,
+    'force-ipv6|6' => $noop,
+
+    # Video Selection:
+    'playlist-start=i' => $noop,
+    'playlist-end=i' => $noop,
+    'playlist-items=s' => $noop, # e.g. 1,2,3,10-13
+    'match-title=s' => $noop, # regex or substr
+    'reject-title=s' => $noop, # regex or substr
+    'max-downloads=i' => $noop,
+    'min-filesize=s' => $noop, # number or number with prefix
+    'max-filesize=s' => $noop, # number or number with prefix
+    'date=s' => $noop,
+    'datebefore=s' => $noop,
+    'dateafter=s' => $noop,
+    'min-views=i' => $noop,
+    'max-views=i' => $noop,
+    'match-filter=s' => $noop, # e.g. "like_count > 100 & dislike_count <? 50 & description"
+    'no-playlist' => $noop,
+    'age-limit=i' => $noop,
+    'download-archive=s' => $noop,
+    'include-ads' => $noop,
+
+    # Download Options:
+    'rate-limit|r=s' => $noop, # number with prefix
+    'retries|R=i' => $noop,
+    'buffer-size=s' => $noop, # number or number with prefix
+    'no-resize-buffer' => $noop,
+    'playlist-reverse' => $noop,
+    'xattr-set-filesize' => $noop,
+    'hls-prefer-native' => $noop,
+    'external-downloader=s' => $noop,
+
+    # Filesystem Options:
+    'batch-file|a=s' => $noop,
+    'id' => $noop,
+    'output|o=s' => $noop,
+    'autonumber-size=i' => $noop,
+    '--restrict-filenames' => $noop,
+    'auto-number|A' => $noop, # DEPRECATED
+    'title|t' => $noop, # DEPRECATED
+    'literal|l' => $noop, # DEPRECATED
+    'no-overwrites|w' => $noop,
+    'continue|c' => $noop,
+    'no-continue' => $noop,
+    'no-part' => $noop,
+    'no-mtime' => $noop,
+    'write-description' => $noop,
+    'write-info-json' => $noop,
+    'write-annotations' => $noop,
+    'load-info=s' => $noop,
+    'cookies=s' => $noop,
+    'cache-dir=s' => $noop,
+    'no-cache-dir' => $noop,
+    'rm-cache-dir' => $noop,
+
+    # Thumbnail images:
+    'write-thumbnail' => $noop,
+    'write-all-thumbnails' => $noop,
+    'list-thumbnails' => $noop,
+
+    # Verbosity / Simulation Options:
+    'quiet|q' => $noop,
+    'no-warnings' => $noop,
+    'simulate|s' => $noop,
+    'skip-download' => $noop,
+    'get-url|g' => $noop,
+    'get-title|e' => $noop,
+    'get-id' => $noop,
+    'get-thumbnail' => $noop,
+    'get-description' => $noop,
+    'get-duration' => $noop,
+    'get-filename' => $noop,
+    'get-format' => $noop,
+    'dump-json|j' => $noop,
+    'dump-single-json|J' => $noop,
+    'print-json' => $noop,
+    'newline' => $noop,
+    'no-progress' => $noop,
+    'console-title' => $noop,
+    'verbose|v' => $noop,
+    'dump-intermediate-pages' => $noop,
+    'write-pages' => $noop,
+    'print-traffic' => $noop,
+    'call-home|C' => $noop,
+    'no-call-home' => $noop,
+
+    # Workarounds:
+    'encoding=s' => $noop,
+    'no-check-certificate' => $noop,
+    'prefer-insecure' => $noop,
+    'user-agent=s' => $noop,
+    'referer=s' => $noop, # url
+    'add-header=s' => $noop, # FIELD:VALUE
+    'bidi-workaround' => $noop,
+    'sleep-interval=i' => $noop,
+
+    # Video Format Options:
+    'format|f=s' => $noop, # format or format1/format2/format3 (by order of preference)
+    'all-formats' => $noop,
+    'prefer-free-formats' => $noop,
+    'max-quality=s' => $noop,
+    'list-formats|F' => $noop,
+    'youtube-skip-dash-manifest' => $noop,
+    'merge-output-format=s' => $noop,
+
+    # Subtitle Options:
+    'write-sub' => $noop,
+    'write-auto-sub' => $noop,
+    'all-subs' => $noop,
+    'list-subs' => $noop,
+    'sub-format=s' => $noop,
+    'sub-lang=s' => $noop, # e.g. 'en,pt'
+
+    # Authentication Options:
+    'username|u=s' => $noop,
+    'password|p:s' => $noop,
+    'twofactor|2=s' => $noop,
+    'netrc|n' => $noop,
+    'video-password=s' => $noop,
+
+    # Post-processing Options:
+    'extract-audio|x' => $noop,
+    'audio-format=s' => $noop,
+    'audio-quality=s' => $noop, # 0..9 or bitrate
+    'recode-video=s' => $noop,
+    'keep-video|k' => $noop,
+    'no-post-overwrites' => $noop,
+    'embed-subs' => $noop,
+    'embed-thumbnail' => $noop,
+    'add-metadata' => $noop,
+    'xattrs' => $noop,
+    'fixup=s' => $noop,
+    'prefer-avconv' => $noop,
+    'prefer-ffmpeg' => $noop,
+    'ffmpeg-location=s' => $noop,
+    'exec=s' => $noop,
+);
+
+# ABSTRACT: Shell completer for youtube-dl
+# PODNAME:
+
+=head1 SYNOPSIS
+
+To install, install the CPAN distribution this command comes in with, and then
+in your bash (and/or bash startup file):
+
+ complete -C _youtube-dl youtube-dl
+
+or, you can use L<shcompgen> to do that for you automatically.
+
+Now L<youtube-dl> has bash completion:
+
+ % youtube-dl --no-pl<tab>
+ % youtube-dl --external-downloader c<tab>
