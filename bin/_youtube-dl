@@ -19,8 +19,6 @@ die "This script is for shell completion only\n"
 
 my $noop = sub {};
 
-# the list of options is taken from output of youtube-dl 2015.02.23.1. it should
-# be updated from time to time.
 GetOptionsWithCompletion(
     sub {
         my %args  = @_;
