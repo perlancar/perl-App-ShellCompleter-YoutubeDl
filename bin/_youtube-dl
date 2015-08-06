@@ -131,6 +131,7 @@ GetOptionsWithCompletion(
     'dump-user-agent' => $noop,
     'list-extractors' => $noop,
     'extractor-descriptions' => $noop,
+    'force-generic-extractor' => $noop,
     'default-search=s' => $noop,
     'ignore-config' => $noop,
     'flat-playlist' => $noop,
@@ -268,6 +269,7 @@ GetOptionsWithCompletion(
     'audio-format=s' => $noop,
     'audio-quality=s' => $noop, # 0..9 or bitrate
     'recode-video=s' => $noop,
+    'postprocessor-args=s' => $noop,
     'keep-video|k' => $noop,
     'no-post-overwrites' => $noop,
     'embed-subs' => $noop,
@@ -300,4 +302,4 @@ Now L<youtube-dl> has bash completion:
  % youtube-dl --no-pl<tab>
  % youtube-dl --external-downloader c<tab>
 
-Last updated for L<youtube-dl> version B<2015.05.20>.
+Last updated for L<youtube-dl> version B<2015.07.28>.
