@@ -1,5 +1,13 @@
 Revision history for App-ShellCompleter-YoutubeDl
 
+0.03    2015-08-06 (PERLANCAR)
+
+	- Update from youtube-dl 2015.05.20 to 2015.07-28 (new options:
+	  --force-generic-extractor & --postprocessor-args).
+
+	- [doc] Mention version of youtube-dl supported.
+
+
 0.02    2015-06-04 (PERLANCAR)
 
 	- Update to youtube-dl 2015.05.20.
