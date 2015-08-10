@@ -20,22 +20,11 @@ die "This script is for shell completion only\n"
 my $noop = sub {};
 
 GetOptionsWithCompletion(
-    sub {
-        my %args  = @_;
-        my $type      = $args{type};
-        my $word      = $args{word};
-        if ($type eq 'arg') {
-            #$log->tracef("Completing arg");
-            return undef;
-        } elsif ($type eq 'optval') {
-            my $ospec = $args{ospec};
-            my $opt   = $args{opt};
-            $log->tracef("Completing optval (opt=$opt)");
             if (
                 $ospec eq 'default-search=s'
             ) {
                 return complete_array_elem(
-                    array => ["gvsearch2:", "auto", "auto_warning", "error", "fixup_error"],
+                    array => [],
                     word  => $word,
                 );
             } elsif (
@@ -121,16 +110,16 @@ GetOptionsWithCompletion(
     },
 
     # General Options:
-    'help|h' => $noop,
-    'version' => $noop,
-    'update|U' => $noop,
+    'help|h' => undef,
+    'version' => undef,
+    'update|U' => undef,
     'ignore-errors|i' => $noop,
     'abort-on-error' => $noop,
     'dump-user-agent' => $noop,
     'list-extractors' => $noop,
     'extractor-descriptions' => $noop,
     'force-generic-extractor' => $noop,
-    'default-search=s' => $noop,
+    'default-search=s' => ["gvsearch2:", "auto", "auto_warning", "error", "fixup_error"],
     'ignore-config' => $noop,
     'flat-playlist' => $noop,
     'no-color' => $noop,
