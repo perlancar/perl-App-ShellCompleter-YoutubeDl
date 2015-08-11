@@ -9,267 +9,191 @@
 use 5.010001;
 use strict;
 use warnings;
-use Log::Any '$log';
+use Log::Any::IfLOG '$log';
 
-use Complete::Util qw(complete_array_elem complete_file);
-use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+use ShellCompleter::Util qw(run_shell_completer_for_getopt_long_app);
 
-die "This script is for shell completion only\n"
-    unless $ENV{COMP_LINE} || $ENV{COMMAND_LINE};
+my $comp_file = sub {
+    require Complete::Util;
+    my %args = @_;
+    Complete::Util::complete_file(word=>$args{word});
+};
 
-my $noop = sub {};
+my $comp_exec_file = sub {
+    require Complete::Util;
+    my %args = @_;
+    Complete::Util::complete_file(word=>$args{word}, filter=>'dx');
+};
 
-GetOptionsWithCompletion(
-            if (
-                $ospec eq 'default-search=s'
-            ) {
-                return complete_array_elem(
-                    array => [],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'external-downloader=s'
-            ) {
-                return complete_array_elem(
-                    array => ["aria2c", "curl", "wget"],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'download-archive=s' ||
-                    $ospec eq 'output|o=s' ||
-                    $ospec eq 'load-info=s' ||
-                    $ospec eq 'cookies=s'
-                ) {
-                return complete_file(word=>$word);
-            } elsif (
-                $ospec eq 'cache-dir=s'
-            ) {
-                return complete_file(word=>$word, filter=>'d');
-            } elsif (
-                $ospec eq 'ffmpeg-location=s'
-            ) {
-                return complete_file(word=>$word, filter=>'dx');
-            } elsif (
-                $ospec eq 'format|f=s'
-            ) {
-                # XXX format supports format1/format2/...
-                return complete_array_elem(
-                    array => [qw/aac m4a mp3 mp4 ogg wav webm/,
-                              qw/best bestvideo bestaudio worst/],
-                    word  => $word,
-                );
-                # XXX format supports merge: bestvideo+bestaudio
-                # XXX format supports filter, e.g. '[filesize>10M]'
-            } elsif (
-                $ospec eq 'merge-output-format=s'
-            ) {
-                return complete_array_elem(
-                    array => [qw/mkv mp4 ogg webm/],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'sub-format=s'
-            ) {
-                # XXX sub-format supports format1/format2/...
-                return complete_array_elem(
-                    array => [qw/aas srt best/],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'audio-format=s'
-            ) {
-                return complete_array_elem(
-                    array => ["best", "aac", "vorbis", "mp3", "m4a", "opus", "wav"],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'audio-quality=s'
-            ) {
-                # XXX audio-quality also supports specifying bitrate e.g. '128k'
-                return complete_array_elem(
-                    array => [0..9],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'recode-video=s'
-            ) {
-                return complete_array_elem(
-                    array => [qw/mp4 flv ogg webm mkv/],
-                    word  => $word,
-                );
-            } elsif (
-                $ospec eq 'fixup=s'
-            ) {
-                return complete_array_elem(
-                    array => [qw/nothing warn detect_or_warn/],
-                    word  => $word,
-                );
-            }
-        }
-        return [];
-    },
+my $comp_dir = sub {
+    require Complete::Util;
+    my %args = @_;
+    Complete::Util::complete_file(word=>$args{word}, filter=>'d');
+};
 
+run_shell_completer_for_getopt_long_app(
     # General Options:
     'help|h' => undef,
     'version' => undef,
     'update|U' => undef,
-    'ignore-errors|i' => $noop,
-    'abort-on-error' => $noop,
-    'dump-user-agent' => $noop,
-    'list-extractors' => $noop,
-    'extractor-descriptions' => $noop,
-    'force-generic-extractor' => $noop,
+    'ignore-errors|i' => undef,
+    'abort-on-error' => undef,
+    'dump-user-agent' => undef,
+    'list-extractors' => undef,
+    'extractor-descriptions' => undef,
+    'force-generic-extractor' => undef,
     'default-search=s' => ["gvsearch2:", "auto", "auto_warning", "error", "fixup_error"],
-    'ignore-config' => $noop,
-    'flat-playlist' => $noop,
-    'no-color' => $noop,
+    'ignore-config' => undef,
+    'flat-playlist' => undef,
+    'no-color' => undef,
 
     # Network Options:
-    'proxy=s' => $noop,
-    'socket-timeout=i' => $noop,
-    'source-address=s' => $noop,
-    'force-ipv4|4' => $noop,
-    'force-ipv6|6' => $noop,
-    'cn-verification-proxy=s' => $noop,
+    'proxy=s' => undef,
+    'socket-timeout=i' => undef,
+    'source-address=s' => undef,
+    'force-ipv4|4' => undef,
+    'force-ipv6|6' => undef,
+    'cn-verification-proxy=s' => undef,
 
     # Video Selection:
-    'playlist-start=i' => $noop,
-    'playlist-end=i' => $noop,
-    'playlist-items=s' => $noop, # e.g. 1,2,3,10-13
-    'match-title=s' => $noop, # regex or substr
-    'reject-title=s' => $noop, # regex or substr
-    'max-downloads=i' => $noop,
-    'min-filesize=s' => $noop, # number or number with prefix
-    'max-filesize=s' => $noop, # number or number with prefix
-    'date=s' => $noop,
-    'datebefore=s' => $noop,
-    'dateafter=s' => $noop,
-    'min-views=i' => $noop,
-    'max-views=i' => $noop,
-    'match-filter=s' => $noop, # e.g. "like_count > 100 & dislike_count <? 50 & description"
-    'no-playlist' => $noop,
-    'yes-playlist' => $noop,
-    'age-limit=i' => $noop,
-    'download-archive=s' => $noop,
-    'include-ads' => $noop,
+    'playlist-start=i' => undef,
+    'playlist-end=i' => undef,
+    'playlist-items=s' => undef, # e.g. 1,2,3,10-13
+    'match-title=s' => undef, # regex or substr
+    'reject-title=s' => undef, # regex or substr
+    'max-downloads=i' => undef,
+    'min-filesize=s' => undef, # number or number with prefix
+    'max-filesize=s' => undef, # number or number with prefix
+    'date=s' => undef,
+    'datebefore=s' => undef,
+    'dateafter=s' => undef,
+    'min-views=i' => undef,
+    'max-views=i' => undef,
+    'match-filter=s' => undef, # e.g. "like_count > 100 & dislike_count <? 50 & description"
+    'no-playlist' => undef,
+    'yes-playlist' => undef,
+    'age-limit=i' => undef,
+    'download-archive=s' => $comp_file,
+    'include-ads' => undef,
 
     # Download Options:
-    'rate-limit|r=s' => $noop, # number with prefix
-    'retries|R=i' => $noop,
-    'buffer-size=s' => $noop, # number or number with prefix
-    'no-resize-buffer' => $noop,
-    'playlist-reverse' => $noop,
-    'xattr-set-filesize' => $noop,
-    'hls-prefer-native' => $noop,
-    'external-downloader=s' => $noop,
-    'external-downloader-args=s' => $noop,
+    'rate-limit|r=s' => undef, # number with prefix
+    'retries|R=i' => undef,
+    'buffer-size=s' => undef, # number or number with prefix
+    'no-resize-buffer' => undef,
+    'playlist-reverse' => undef,
+    'xattr-set-filesize' => undef,
+    'hls-prefer-native' => undef,
+    'external-downloader=s' => ["aria2c", "curl", "wget"],
+    'external-downloader-args=s' => undef,
 
     # Filesystem Options:
-    'batch-file|a=s' => $noop,
-    'id' => $noop,
-    'output|o=s' => $noop,
-    'autonumber-size=i' => $noop,
-    '--restrict-filenames' => $noop,
-    'auto-number|A' => $noop, # DEPRECATED
-    'title|t' => $noop, # DEPRECATED
-    'literal|l' => $noop, # DEPRECATED
-    'no-overwrites|w' => $noop,
-    'continue|c' => $noop,
-    'no-continue' => $noop,
-    'no-part' => $noop,
-    'no-mtime' => $noop,
-    'write-description' => $noop,
-    'write-info-json' => $noop,
-    'write-annotations' => $noop,
-    'load-info=s' => $noop,
-    'cookies=s' => $noop,
-    'cache-dir=s' => $noop,
-    'no-cache-dir' => $noop,
-    'rm-cache-dir' => $noop,
+    'batch-file|a=s' => undef,
+    'id' => undef,
+    'output|o=s' => $comp_file,
+    'autonumber-size=i' => undef,
+    '--restrict-filenames' => undef,
+    'auto-number|A' => undef, # DEPRECATED
+    'title|t' => undef, # DEPRECATED
+    'literal|l' => undef, # DEPRECATED
+    'no-overwrites|w' => undef,
+    'continue|c' => undef,
+    'no-continue' => undef,
+    'no-part' => undef,
+    'no-mtime' => undef,
+    'write-description' => undef,
+    'write-info-json' => undef,
+    'write-annotations' => undef,
+    'load-info=s' => $comp_file,
+    'cookies=s' => $comp_file,
+    'cache-dir=s' => $comp_dir,
+    'no-cache-dir' => undef,
+    'rm-cache-dir' => undef,
 
     # Thumbnail images:
-    'write-thumbnail' => $noop,
-    'write-all-thumbnails' => $noop,
-    'list-thumbnails' => $noop,
+    'write-thumbnail' => undef,
+    'write-all-thumbnails' => undef,
+    'list-thumbnails' => undef,
 
     # Verbosity / Simulation Options:
-    'quiet|q' => $noop,
-    'no-warnings' => $noop,
-    'simulate|s' => $noop,
-    'skip-download' => $noop,
-    'get-url|g' => $noop,
-    'get-title|e' => $noop,
-    'get-id' => $noop,
-    'get-thumbnail' => $noop,
-    'get-description' => $noop,
-    'get-duration' => $noop,
-    'get-filename' => $noop,
-    'get-format' => $noop,
-    'dump-json|j' => $noop,
-    'dump-single-json|J' => $noop,
-    'print-json' => $noop,
-    'newline' => $noop,
-    'no-progress' => $noop,
-    'console-title' => $noop,
-    'verbose|v' => $noop,
-    'dump-pages' => $noop,
-    'write-pages' => $noop,
-    'print-traffic' => $noop,
-    'call-home|C' => $noop,
-    'no-call-home' => $noop,
+    'quiet|q' => undef,
+    'no-warnings' => undef,
+    'simulate|s' => undef,
+    'skip-download' => undef,
+    'get-url|g' => undef,
+    'get-title|e' => undef,
+    'get-id' => undef,
+    'get-thumbnail' => undef,
+    'get-description' => undef,
+    'get-duration' => undef,
+    'get-filename' => undef,
+    'get-format' => undef,
+    'dump-json|j' => undef,
+    'dump-single-json|J' => undef,
+    'print-json' => undef,
+    'newline' => undef,
+    'no-progress' => undef,
+    'console-title' => undef,
+    'verbose|v' => undef,
+    'dump-pages' => undef,
+    'write-pages' => undef,
+    'print-traffic' => undef,
+    'call-home|C' => undef,
+    'no-call-home' => undef,
 
     # Workarounds:
-    'encoding=s' => $noop,
-    'no-check-certificate' => $noop,
-    'prefer-insecure' => $noop,
-    'user-agent=s' => $noop,
-    'referer=s' => $noop, # url
-    'add-header=s' => $noop, # FIELD:VALUE
-    'bidi-workaround' => $noop,
-    'sleep-interval=i' => $noop,
+    'encoding=s' => undef,
+    'no-check-certificate' => undef,
+    'prefer-insecure' => undef,
+    'user-agent=s' => undef,
+    'referer=s' => undef, # url
+    'add-header=s' => undef, # FIELD:VALUE
+    'bidi-workaround' => undef,
+    'sleep-interval=i' => undef,
 
     # Video Format Options:
-    'format|f=s' => $noop, # format or format1/format2/format3 (by order of preference)
-    'all-formats' => $noop,
-    'prefer-free-formats' => $noop,
-    'list-formats|F' => $noop,
-    'youtube-skip-dash-manifest' => $noop,
-    'merge-output-format=s' => $noop,
+    'format|f=s' => [qw/aac m4a mp3 mp4 ogg wav webm/,
+                     qw/best bestvideo bestaudio worst/], # format or format1/format2/format3 (by order of preference)
+    'all-formats' => undef,
+    'prefer-free-formats' => undef,
+    'list-formats|F' => undef,
+    'youtube-skip-dash-manifest' => undef,
+    'merge-output-format=s' => [qw/mkv mp4 ogg webm/],
 
     # Subtitle Options:
-    'write-sub' => $noop,
-    'write-auto-sub' => $noop,
-    'all-subs' => $noop,
-    'list-subs' => $noop,
-    'sub-format=s' => $noop,
-    'sub-lang=s' => $noop, # e.g. 'en,pt'
+    'write-sub' => undef,
+    'write-auto-sub' => undef,
+    'all-subs' => undef,
+    'list-subs' => undef,
+    'sub-format=s' => [qw/aas srt best/],
+    'sub-lang=s' => undef, # e.g. 'en,pt'
 
     # Authentication Options:
-    'username|u=s' => $noop,
-    'password|p:s' => $noop,
-    'twofactor|2=s' => $noop,
-    'netrc|n' => $noop,
-    'video-password=s' => $noop,
+    'username|u=s' => undef,
+    'password|p:s' => undef,
+    'twofactor|2=s' => undef,
+    'netrc|n' => undef,
+    'video-password=s' => undef,
 
     # Post-processing Options:
-    'extract-audio|x' => $noop,
-    'audio-format=s' => $noop,
-    'audio-quality=s' => $noop, # 0..9 or bitrate
-    'recode-video=s' => $noop,
-    'postprocessor-args=s' => $noop,
-    'keep-video|k' => $noop,
-    'no-post-overwrites' => $noop,
-    'embed-subs' => $noop,
-    'embed-thumbnail' => $noop,
-    'add-metadata' => $noop,
-    'metadata-from-title=s' => $noop,
-    'xattrs' => $noop,
-    'fixup=s' => $noop,
-    'prefer-avconv' => $noop,
-    'prefer-ffmpeg' => $noop,
-    'ffmpeg-location=s' => $noop,
-    'exec=s' => $noop,
-    'convert-subtitles=s' => $noop,
+    'extract-audio|x' => undef,
+    'audio-format=s' => ["best", "aac", "vorbis", "mp3", "m4a", "opus", "wav"],
+    'audio-quality=s' => [0..9], # 0..9 or bitrate
+    'recode-video=s' => [qw/mp4 flv ogg webm mkv/],
+    'postprocessor-args=s' => undef,
+    'keep-video|k' => undef,
+    'no-post-overwrites' => undef,
+    'embed-subs' => undef,
+    'embed-thumbnail' => undef,
+    'add-metadata' => undef,
+    'metadata-from-title=s' => undef,
+    'xattrs' => undef,
+    'fixup=s' => [qw/nothing warn detect_or_warn/],
+    'prefer-avconv' => undef,
+    'prefer-ffmpeg' => undef,
+    'ffmpeg-location=s' => $comp_exec_file,
+    'exec=s' => undef,
+    'convert-subtitles=s' => undef,
 );
 
 # ABSTRACT: Shell completer for youtube-dl
