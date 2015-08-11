@@ -1,5 +1,13 @@
 Revision history for App-ShellCompleter-YoutubeDl
 
+0.04    2015-08-11 (PERLANCAR)
+
+	- Update from youtube-dl 2015.07.28 to 2015.08.09.
+
+	- Use ShellCompleter::Utils to be more DRY, use Log::Any::IfLOG to
+	  reduce startup overhead.
+
+
 0.03    2015-08-06 (PERLANCAR)
 
 	- Update from youtube-dl 2015.05.20 to 2015.07-28 (new options:
