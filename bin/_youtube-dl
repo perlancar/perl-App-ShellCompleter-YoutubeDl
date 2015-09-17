@@ -14,21 +14,21 @@ use Log::Any::IfLOG '$log';
 use ShellCompleter::Util qw(run_shell_completer_for_getopt_long_app);
 
 my $comp_file = sub {
-    require Complete::Util;
+    require Complete::File;
     my %args = @_;
-    Complete::Util::complete_file(word=>$args{word});
+    Complete::File::complete_file(word=>$args{word});
 };
 
 my $comp_exec_file = sub {
-    require Complete::Util;
+    require Complete::File;
     my %args = @_;
-    Complete::Util::complete_file(word=>$args{word}, filter=>'dx');
+    Complete::File::complete_file(word=>$args{word}, filter=>'dx');
 };
 
 my $comp_dir = sub {
-    require Complete::Util;
+    require Complete::File;
     my %args = @_;
-    Complete::Util::complete_file(word=>$args{word}, filter=>'d');
+    Complete::File::complete_file(word=>$args{word}, filter=>'d');
 };
 
 run_shell_completer_for_getopt_long_app(
