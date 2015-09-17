@@ -1,5 +1,13 @@
 Revision history for App-ShellCompleter-YoutubeDl
 
+0.05    2015-09-17 (PERLANCAR)
+
+	- Adjust to Complete::Util 0.36 (complete_file() split to
+	  Complete-File).
+
+	- Add help output for 2015.08.16.1 (no change).
+
+
 0.04    2015-08-11 (PERLANCAR)
 
 	- Update from youtube-dl 2015.07.28 to 2015.08.09.
