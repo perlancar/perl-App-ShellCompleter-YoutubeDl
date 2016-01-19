@@ -1,5 +1,11 @@
 Revision history for App-ShellCompleter-YoutubeDl
 
+0.06    2016-01-19 (PERLANCAR)
+
+	- Update to youtube-dl 2016.01.15 (--convert-subtitle renamed to
+	  --convert-subs).
+
+
 0.05    2015-09-17 (PERLANCAR)
 
 	- Adjust to Complete::Util 0.36 (complete_file() split to
