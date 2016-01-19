@@ -193,7 +193,7 @@ run_shell_completer_for_getopt_long_app(
     'prefer-ffmpeg' => undef,
     'ffmpeg-location=s' => $comp_exec_file,
     'exec=s' => undef,
-    'convert-subtitles=s' => undef,
+    'convert-subs=s' => undef,
 );
 
 # ABSTRACT: Shell completer for youtube-dl
