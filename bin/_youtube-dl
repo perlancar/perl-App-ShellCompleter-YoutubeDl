@@ -212,5 +212,3 @@ Now L<youtube-dl> has bash completion:
 
  % youtube-dl --no-pl<tab>
  % youtube-dl --external-downloader c<tab>
-
-Last updated for L<youtube-dl> version B<2015.07.28>.
