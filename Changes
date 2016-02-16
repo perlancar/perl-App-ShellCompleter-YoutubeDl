@@ -1,5 +1,10 @@
 Revision history for App-ShellCompleter-YoutubeDl
 
+0.08    2016-02-16 (PERLANCAR)
+
+	- Update to youtube-dl 2016.02.13 (add --hls-use-mpegts).
+
+
 0.07    2016-01-19 (PERLANCAR)
 
 	- No functional changes.
