@@ -84,6 +84,7 @@ run_shell_completer_for_getopt_long_app(
     'playlist-reverse' => undef,
     'xattr-set-filesize' => undef,
     'hls-prefer-native' => undef,
+    'hls-use-mpegts' => undef,
     'external-downloader=s' => ["aria2c", "axel", "curl", "httpie", "wget"],
     'external-downloader-args=s' => undef,
 
