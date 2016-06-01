@@ -45,6 +45,7 @@ run_shell_completer_for_getopt_long_app(
     'default-search=s' => ["gvsearch2:", "auto", "auto_warning", "error", "fixup_error"],
     'ignore-config' => undef,
     'flat-playlist' => undef,
+    'mark-watched!' => undef,
     'no-color' => undef,
 
     # Network Options:
@@ -79,11 +80,13 @@ run_shell_completer_for_getopt_long_app(
     # Download Options:
     'rate-limit|r=s' => undef, # number with prefix
     'retries|R=i' => undef,
+    'fragment-retries=i' => undef,
     'buffer-size=s' => undef, # number or number with prefix
     'no-resize-buffer' => undef,
     'playlist-reverse' => undef,
     'xattr-set-filesize' => undef,
     'hls-prefer-native' => undef,
+    'hls-prefer-ffmpeg' => undef,
     'hls-use-mpegts' => undef,
     'external-downloader=s' => ["aria2c", "axel", "curl", "httpie", "wget"],
     'external-downloader-args=s' => undef,
