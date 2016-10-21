@@ -11,6 +11,7 @@ use strict;
 use warnings;
 use Log::Any::IfLOG '$log';
 
+use Getopt::Long::Complete; # just so we can be detected as Getopt::Long script
 use ShellCompleter::Util qw(run_shell_completer_for_getopt_long_app);
 
 my $comp_file = sub {
