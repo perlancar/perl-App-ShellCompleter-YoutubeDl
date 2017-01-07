@@ -1,5 +1,3 @@
-Revision history for App-ShellCompleter-YoutubeDl
-
 0.10    2016-10-21 (PERLANCAR)
 
 	- Allow script to be detected by Getopt::Long::Util as Getopt::Long
