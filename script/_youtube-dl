@@ -32,6 +32,7 @@ my $comp_dir = sub {
     Complete::File::complete_file(word=>$args{word}, filter=>'d');
 };
 
+binmode(STDOUT, ":encoding(utf8)");
 run_shell_completer_for_getopt_long_app(
     # General Options:
     'help|h' => undef,
