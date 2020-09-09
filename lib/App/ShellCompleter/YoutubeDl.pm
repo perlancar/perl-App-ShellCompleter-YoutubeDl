@@ -1,6 +1,8 @@
 package App::ShellCompleter::YoutubeDl;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 1;
